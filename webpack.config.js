@@ -21,7 +21,6 @@ module.exports = {
       inject: 'body',
       filename: 'index.html'
     }),
-    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
@@ -29,19 +28,26 @@ module.exports = {
     })
   ],
   module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      exclude: /node_modules/,
-      loader: 'babel',
-      query: {
-        "presets": ["react", "es2015", "stage-0", "react-hmre"]
-      }
-    }, {
-      test: /\.json?$/,
-      loader: 'json'
-    }, {
-      test: /\.css$/,
-      loader: 'style!css?modules&localIdentName=[name]---[local]---[hash:base64:5]'
-    }]
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: [{
+          loader: 'babel-loader',
+          options: { "presets": ["react", "es2015", "stage-0", "react-hmre"] }
+        }]
+      }, 
+      {
+        test: /\.(css)$/,
+        loader: [
+          'style-loader',
+          'css-loader?sourceMap&modules&importLoaders=1&localIdentName=[name]---[local]---[hash:base64:5]',
+			  ]
+		  },
+      // {
+      //   test: /\.css$/,
+      //   use: ['style!css?modules&localIdentName=[name]---[local]---[hash:base64:5]']
+      // }
+    ]
   }
 };
